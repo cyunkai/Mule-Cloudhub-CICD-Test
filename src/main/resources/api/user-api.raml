@@ -1,0 +1,107 @@
+#%RAML 1.0
+title: Example API for User Data
+version: v1
+# 本地端接收
+baseUri: http://localhost:8081/api/v1
+/user:
+  post:
+    description: Create a new user
+    body:
+      application/json:
+        type: object
+        properties:
+          name:
+            type: string
+            required: true
+          email:
+            type: string
+            required: true
+    responses:
+      201:
+        description: User created successfully
+        body:
+          application/json:
+            type: object
+            properties:
+              id: 
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              createdAt:
+                type: string
+              updatedAt:
+                type: string
+  get:
+    description: Get current user data
+    queryParameters:
+      id:
+        description: The ID of the user to fetch
+        type: string
+        required: true
+    responses:
+      200:
+        description: A user has been retrieved
+        body:
+          application/json:
+            type: object
+            properties:
+              id: 
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              createdAt:
+                type: string
+                description: When the user was created (ISO 8601 date-time format)
+              updatedAt:
+                type: string
+                description: When the user was last updated (ISO 8601 date-time format)
+      404:
+        description: User not found
+  put:
+    description: Update current user
+    queryParameters:
+      id:
+        description: The ID of the user to update
+        type: string
+        required: true
+    body:
+      application/json:
+        type: object
+        properties:
+          name:
+            type: string
+          email:
+            type: string
+    responses:
+      200:
+        description: User updated successfully
+        body:
+          application/json:
+            type: object
+            properties:
+              id: 
+                type: string
+              name:
+                type: string
+              email:
+                type: string
+              updatedAt:
+                type: string
+      404:
+        description: User not found
+  delete:
+    description: Delete current user
+    queryParameters:
+      id:
+        description: The ID of the user to delete
+        type: string
+        required: true
+    responses:
+      204:
+        description: User deleted successfully
+      404:
+        description: User not found
