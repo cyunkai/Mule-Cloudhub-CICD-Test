@@ -1,0 +1,41 @@
+name: Deploy to CloudHub on PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed  # 當 PR 被合併時觸發
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true  # 確保是 merge 才執行
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🛠️ Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # 根據你的 Mule 版本選擇合適的 Java 版本
+
+      - name: 📦 Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: 🚀 Deploy to CloudHub
+        run: |
+          curl -X POST "https://anypoint.mulesoft.com/cloudhub/api/v2/applications/${{ secrets.MULE_APP_NAME }}" \
+          -H "Content-Type: application/json" \
+          -H "X-ANYPNT-ENV-ID: ${{ secrets.CLOUDHUB_ENVIRONMENT }}" \
+          -H "X-ANYPNT-ORG-ID: ${{ secrets.ORG_ID }}" \
+          -u "${{ secrets.ANYPOINT_CLIENT_ID }}:${{ secrets.ANYPOINT_CLIENT_SECRET }}" \
+          -d '{
+                "runtime": "4.4.0",
+                "region": "us-east-1",
+                "workerSize": "0.1",
+                "workers": 1,
+                "properties": {},
+                "file": "'"$(base64 -w 0 target/*.jar)"'"
+              }'
+
