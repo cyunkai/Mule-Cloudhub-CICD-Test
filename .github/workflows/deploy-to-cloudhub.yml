@@ -1,13 +1,16 @@
-name: Deploy to CloudHub on PR Merge
+name: Deploy to CloudHub on PR Merge or Push to Main
 
 on:
   pull_request:
     types:
       - closed  # 當 PR 被合併時觸發
+  push:
+    branches:
+      - main  # 當有 push 到 main 也會觸發
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true  # 確保是 merge 才執行
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
