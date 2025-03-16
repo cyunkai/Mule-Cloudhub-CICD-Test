@@ -2,11 +2,13 @@ name: Deploy to CloudHub on PR Merge or Push to Main
 
 on:
   pull_request:
+    branches:
+      - main  # 只有 PR 合併到 main 才會執行
     types:
       - closed  # 當 PR 被合併時觸發
   push:
     branches:
-      - main  # 當有 push 到 main 也會觸發
+      - main  # 只有 push 到 main 才會執行
 
 jobs:
   deploy:
@@ -28,9 +30,10 @@ jobs:
 
       - name: 🚀 Deploy to CloudHub
         run: |
+          JAR_FILE=$(ls target/*.jar | head -n 1)
           curl -X POST "https://anypoint.mulesoft.com/cloudhub/api/v2/applications/${{ secrets.MULE_APP_NAME }}" \
           -H "X-ANYPNT-ENV-ID: ${{ secrets.CLOUDHUB_ENVIRONMENT }}" \
           -H "X-ANYPNT-ORG-ID: ${{ secrets.ORG_ID }}" \
           -H "Content-Type: application/java-archive" \
           -u "${{ secrets.CONNECTED_APP_CLIENT_ID }}:${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" \
-          --data-binary "@target/your-app.jar"
+          --data-binary "@JAR_FILE"
