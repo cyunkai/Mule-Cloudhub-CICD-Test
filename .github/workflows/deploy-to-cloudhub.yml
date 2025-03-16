@@ -29,16 +29,8 @@ jobs:
       - name: 🚀 Deploy to CloudHub
         run: |
           curl -X POST "https://anypoint.mulesoft.com/cloudhub/api/v2/applications/${{ secrets.MULE_APP_NAME }}" \
-          -H "Content-Type: application/json" \
           -H "X-ANYPNT-ENV-ID: ${{ secrets.CLOUDHUB_ENVIRONMENT }}" \
           -H "X-ANYPNT-ORG-ID: ${{ secrets.ORG_ID }}" \
-          -u "${{ secrets.ANYPOINT_CLIENT_ID }}:${{ secrets.ANYPOINT_CLIENT_SECRET }}" \
-          -d '{
-                "runtime": "4.7.1",
-                "region": "us-east-2",
-                "workerSize": "0.1",
-                "workers": 1,
-                "properties": {},
-                "file": "'"$(base64 -w 0 target/*.jar)"'"
-              }'
-
+          -H "Content-Type: application/java-archive" \
+          -u "${{ secrets.CONNECTED_APP_CLIENT_ID }}:${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" \
+          --data-binary "@target/your-app.jar"
