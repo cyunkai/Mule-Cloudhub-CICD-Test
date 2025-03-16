@@ -28,12 +28,20 @@ jobs:
       - name: 📦 Build with Maven
         run: mvn clean package -DskipTests
 
+      - name: 🔍 List target directory
+        run: ls -l target/
+
       - name: 🚀 Deploy to CloudHub
         run: |
-          JAR_FILE=$(ls target/*.jar | head -n 1)
+          JAR_FILE=$(find target -name "*.jar" | head -n 1)
+          if [ -z "$JAR_FILE" ]; then
+            echo "Error: No JAR file found!"
+            exit 1
+          fi
+          echo "Using JAR file: $JAR_FILE"
           curl -X POST "https://anypoint.mulesoft.com/cloudhub/api/v2/applications/${{ secrets.MULE_APP_NAME }}" \
           -H "X-ANYPNT-ENV-ID: ${{ secrets.CLOUDHUB_ENVIRONMENT }}" \
           -H "X-ANYPNT-ORG-ID: ${{ secrets.ORG_ID }}" \
           -H "Content-Type: application/java-archive" \
           -u "${{ secrets.CONNECTED_APP_CLIENT_ID }}:${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" \
-          --data-binary "@JAR_FILE"
+          --data-binary "@$JAR_FILE"
