@@ -35,6 +35,7 @@ jobs:
             exit 1
           fi
           echo "Using JAR file: $JAR_FILE"
-          mvn deploy --settings .maven/settings.xml -DskipMunitTests -DmuleDeploy \
+          mvn clean package deploy --settings .maven/settings.xml -DskipMunitTests -DmuleDeploy \
+          -Dmule.artifact=$GITHUB_WORKSPACE/target/${{ env.APP_NAME }}-${{ env.APP_VERSION }}-mule-application.jar \
           -Dclient.id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
           -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" 
