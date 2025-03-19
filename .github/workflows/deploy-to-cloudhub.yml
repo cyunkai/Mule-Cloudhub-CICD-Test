@@ -1,10 +1,10 @@
-name: Deploy to CloudHub on PR Merge or Push to Main
+name: Deploy to CloudHub on Push to Main
 
 on:
   pull_request:
   push:
     branches:
-      - main  # 只有 push 到 main 才會執行
+      - main
 
 jobs:
   deploy:
@@ -19,7 +19,12 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # 根據你的 Mule 版本選擇合適的 Java 版本
+          java-version: '17'
+
+      - name: 📦 Set environment variables
+        run: |
+          echo "APP_NAME=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)" >> $GITHUB_ENV
+          echo "APP_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
 
       - name: 📦 Build with Maven
         run: mvn clean package -DskipTests
@@ -29,13 +34,6 @@ jobs:
 
       - name: 🚀 Deploy to CloudHub 2.0
         run: |
-          JAR_FILE=$(find target -name "*.jar" | head -n 1)
-          if [ -z "$JAR_FILE" ]; then
-            echo "Error: No JAR file found!"
-            exit 1
-          fi
-          echo "Using JAR file: $JAR_FILE"
-          mvn clean package deploy --settings .maven/settings.xml -DskipMunitTests -DmuleDeploy \
-          -Dmule.artifact=$GITHUB_WORKSPACE/target/${{ env.APP_NAME }}-${{ env.APP_VERSION }}-mule-application.jar \
+          mvn clean deploy -DskipTests -DmuleDeploy \
           -Dclient.id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
-          -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}" 
+          -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}"
