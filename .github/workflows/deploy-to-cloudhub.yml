@@ -34,7 +34,13 @@ jobs:
 
       - name: 🚀 Deploy to CloudHub 2.0
         run: |
-          mvn -X clean deploy -DskipTests -DmuleDeploy \
+          mvn clean deploy -X -DskipTests -DmuleDeploy \
+          -Dmule.maven.plugin.version=4.3.0 \
+          -Danypoint.platformUri=https://anypoint.mulesoft.com \
+          -Danypoint.platform.client_id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
+          -Danypoint.platform.client_secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}"
+          -Danypoint.environment=Sandbox \
+          -Danypoint.platform.provider=MC \
+          -Danypoint.platform.target=Cloudhub-US-East-2 \
           -Ddeployment.type=cloudhub2 \
-          -Dclient.id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
-          -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}"
+          -Dapp.name=${APP_NAME}
