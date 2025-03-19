@@ -40,6 +40,9 @@
                         <releaseChannel>LTS</releaseChannel>
                         <replicas>1</replicas>
                         <vCores>0.1</vCores>
+                        <!-- 跳過Exchange部署驗證 -->
+                        <skipDeploymentVerification>true</skipDeploymentVerification>
+                        <!-- 直接使用打包的JAR文件 -->
                         <deploymentSettings>
                             <generateDefaultPublicUrl>true</generateDefaultPublicUrl>
                         </deploymentSettings>
