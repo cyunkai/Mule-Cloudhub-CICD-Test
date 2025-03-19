@@ -34,7 +34,7 @@ jobs:
 
       - name: 🚀 Deploy to CloudHub 2.0
         run: |
-          mvn clean deploy -DskipTests -DmuleDeploy \
+          mvn -X clean deploy -DskipTests -DmuleDeploy \
           -Ddeployment.type=cloudhub2 \
           -Dclient.id="${{ secrets.CONNECTED_APP_CLIENT_ID }}" \
           -Dclient.secret="${{ secrets.CONNECTED_APP_CLIENT_SECRET }}"
