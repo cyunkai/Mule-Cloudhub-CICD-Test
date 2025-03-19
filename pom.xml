@@ -47,6 +47,10 @@
                         <deploymentSettings>
                             <generateDefaultPublicUrl>true</generateDefaultPublicUrl>
                         </deploymentSettings>
+                        <credentials>
+                            <clientId>${anypoint.platform.client_id}</clientId>
+                            <clientSecret>${anypoint.platform.client_secret}</clientSecret>
+                        </credentials>
                     </cloudHubV2Deployment>
                     <outputDirectory>target</outputDirectory>
                 </configuration>
