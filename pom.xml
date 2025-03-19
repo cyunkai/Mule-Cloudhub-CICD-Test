@@ -33,7 +33,7 @@
                     <cloudhub2Deployment>
                         <uri>https://anypoint.mulesoft.com</uri>
                         <provider>MC</provider>
-                        <environment>SANDBOX</environment>
+                        <environment>Sandbox</environment>
                         <target>Cloudhub-US-East-2</target>
                         <server>Repository</server>
                         <applicationName>${project.artifactId}</applicationName>
@@ -68,7 +68,12 @@
 			<version>1.11.5</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-	</dependencies>
+	    <dependency>
+            <groupId>com.github.everit-org.json-schema</groupId>
+            <artifactId>org.everit.json.schema</artifactId>
+            <version>1.14.1</version> <!-- 嘗試較新的版本 -->
+        </dependency>
+    </dependencies>
 
 	<repositories>
 		<repository>
@@ -88,6 +93,10 @@
             <name>Private Exchange repository</name>
             <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
             <layout>default</layout>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
 	</repositories>
 
