@@ -28,32 +28,46 @@
 				<artifactId>mule-maven-plugin</artifactId>
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
-                <configuration>
-                    <classifier>mule-application</classifier>
-                    <deploymentType>cloudhub2</deploymentType>
-                    <cloudHubV2Deployment>
-                        <uri>https://anypoint.mulesoft.com</uri>
-                        <provider>MC</provider>
-                        <environmentName>Sandbox</environmentName>
-                        <target>Cloudhub-US-East-2</target>
-                        <server>Repository</server>
-                        <applicationName>${project.artifactId}</applicationName>
-                        <releaseChannel>LTS</releaseChannel>
-                        <replicas>1</replicas>
-                        <vCores>0.1</vCores>
-                        <!-- 跳過Exchange部署驗證 -->
-                        <skipDeploymentVerification>true</skipDeploymentVerification>
-                        <!-- 直接使用打包的JAR文件 -->
-                        <deploymentSettings>
-                            <generateDefaultPublicUrl>true</generateDefaultPublicUrl>
-                        </deploymentSettings>
-                        <credentials>
-                            <clientId>${anypoint.platform.client_id}</clientId>
-                            <clientSecret>${anypoint.platform.client_secret}</clientSecret>
-                        </credentials>
-                    </cloudHubV2Deployment>
-                    <outputDirectory>target</outputDirectory>
-                </configuration>
+				<configuration>
+					<classifier>mule-application</classifier>
+					<deploymentType>cloudhub2</deploymentType>
+					<cloudHubV2Deployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<provider>MC</provider>
+						<environmentName>Sandbox</environmentName>
+						<target>Cloudhub-US-East-2</target>
+						<server>Repository</server>
+						<applicationName>${project.artifactId}</applicationName>
+						<releaseChannel>LTS</releaseChannel>
+						<replicas>1</replicas>
+						<vCores>0.1</vCores>
+						<!-- 跳過Exchange部署驗證 -->
+						<skipDeploymentVerification>true</skipDeploymentVerification>
+						<!-- 直接使用打包的JAR文件 -->
+						<deploymentSettings>
+							<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+						</deploymentSettings>
+						<credentials>
+							<clientId>${anypoint.platform.client_id}</clientId>
+							<clientSecret>${anypoint.platform.client_secret}</clientSecret>
+						</credentials>
+					</cloudHubV2Deployment>
+					<outputDirectory>target</outputDirectory>
+					<sharedLibraries>
+						<sharedLibrary>
+							<groupId>com.sap.conn.jco</groupId>
+							<artifactId>com.sap.conn.jco.sapjco3</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>com.sap.conn.idoc</groupId>
+							<artifactId>ccom.sap.conn.idoc.sapidoc3</artifactId>
+						</sharedLibrary>
+						<sharedLibrary>
+							<groupId>com.sap.conn.jco</groupId>
+							<artifactId>libsapjco3</artifactId>
+						</sharedLibrary>
+					</sharedLibraries>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -77,14 +91,42 @@
 			<version>1.11.5</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-	    <dependency>
-            <groupId>com.github.everit-org.json-schema</groupId>
-            <artifactId>org.everit.json.schema</artifactId>
-            <version>1.14.1</version> <!-- 嘗試較新的版本 -->
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>com.github.everit-org.json-schema</groupId>
+			<artifactId>org.everit.json.schema</artifactId>
+			<version>1.14.1</version>
+			<!-- 嘗試較新的版本 -->
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>mule-sap-connector</artifactId>
+			<version>5.9.12</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.conn.jco</groupId>
+			<artifactId>com.sap.conn.jco.sapjco3</artifactId>
+			<version>3.1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.conn.idoc</groupId>
+			<artifactId>ccom.sap.conn.idoc.sapidoc3</artifactId>
+			<version>3.1.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sap.conn.jco</groupId>
+			<artifactId>libsapjco3</artifactId>
+			<version>3.1.11</version>
+			<type>so</type>
+		</dependency>
+	</dependencies>
 
 	<repositories>
+		<repository>
+			<id>repsy</id>
+			<name>Private Maven Repository on Repsy</name>
+			<url>https://repo.repsy.io/mvn/dannywchang/mulesoft-maven</url>
+		</repository>
 		<repository>
 			<id>anypoint-exchange-v3</id>
 			<name>Anypoint Exchange</name>
@@ -97,18 +139,10 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
-<!--
-        <repository>
-            <id>Repository</id>
-            <name>Private Exchange repository</name>
-            <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
-            <layout>default</layout>
-        </repository>
--->
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -123,13 +157,13 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-    <distributionManagement>
-        <repository>
-            <id>Repository</id>
-            <name>Corporate Repository</name>
-            <url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>Repository</id>
+			<name>Corporate Repository</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/${project.groupId}/maven</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 
 </project>

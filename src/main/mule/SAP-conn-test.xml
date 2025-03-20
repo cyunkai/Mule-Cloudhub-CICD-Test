@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:sap="http://www.mulesoft.org/schema/mule/sap" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd">
+	<sap:sap-config name="SAP_Config" doc:name="SAP Config" doc:id="9c2570f0-4699-4761-9915-994f64cdfc6e" >
+		<sap:certificate-connection systemNumber="1" client="800" applicationServerHost="127.0.0.1"/>
+	</sap:sap-config>
+	<flow name="SAP-conn-testFlow" doc:id="0efb6799-995e-4f17-819f-9b5ce79b3009" >
+		<scheduler doc:name="Scheduler" doc:id="65a0606a-e9fd-4c57-b624-6acc2d193da1" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" startDelay="1" timeUnit="DAYS"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Logger" doc:id="033ef7d0-1a78-4c3a-86ae-cf40399f3e67" message="Welcome to SAP"/>
+		<sap:get-function doc:name="Get function" doc:id="716f1d70-2be2-4b81-aede-4d22b9ca80a6" config-ref="SAP_Config" key="ABC"/>
+		<logger level="INFO" doc:name="Logger" doc:id="e3d594aa-f045-4b8a-82c9-531ed5a849c0" />
+	</flow>
+</mule>
